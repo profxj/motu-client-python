@@ -89,7 +89,7 @@ def get_client_artefact():
     touch it unless you know what you are doing."""
     return motu_api.get_client_artefact()
 
-def load_options():
+def load_options(options=None):
     """load options to handle"""
 
     _options = None
@@ -261,7 +261,8 @@ def load_options():
 
     parser.set_defaults( **default_values )
 
-    return parser.parse_args()
+    return parser.parse_args() if options is None else parser.parse_args(options)
+
 
 def option_callback_variable(option, opt, value, parser):
     global _variables
@@ -279,14 +280,15 @@ def initLogger():
 #===============================================================================
 # The Main function
 #===============================================================================
-def main():
+def main(_options=None):
     start_time = datetime.datetime.now()
 
     initLogger()
 
     try:
         # we prepare options we want
-        (_options, args) = load_options()
+        if _options is None:
+            (_options, args) = load_options()
 
         if _options.log_level != None:
             logging.getLogger().setLevel(int(_options.log_level))
